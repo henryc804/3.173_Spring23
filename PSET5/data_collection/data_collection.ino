@@ -60,13 +60,13 @@ void loop()
     // taking timestamp to measure out target frequency
     timestamp = millis();
 
-    // // Fiber 1 is left
-    // fiber1Reading =  fiber1.capacitiveSensor(numReadings);
-    // // Fiber 2 is right
-    // fiber2Reading =  fiber2.capacitiveSensor(numReadings);
+    // Fiber 1 is left
+    fiber1Reading =  fiber1.capacitiveSensor(numReadings);
+    // Fiber 2 is right
+    fiber2Reading =  fiber2.capacitiveSensor(numReadings);
 
-    fiber1Reading = random(500);
-    fiber2Reading = random(500);
+    // fiber1Reading = random(500);
+    // fiber2Reading = random(500);
 
     Serial.print(timestamp - start_timestamp);
     Serial.print(",");
