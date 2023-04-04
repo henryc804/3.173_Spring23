@@ -5,8 +5,8 @@ https://github.com/edgeimpulse/example-data-collection-csv
 #include <ESP_CapSense.h>
 
 // Capacitive sensor fibers
-CapacitiveSensor fiber1 = CapacitiveSensor(4,33);        // resistor between pins 4 (A5) & 33, pin 33 is read pin
-CapacitiveSensor fiber2 = CapacitiveSensor(4,15);        // resistor between pins 4 (A5) & 15, pin 15 is read pin
+CapacitiveSensor fiber1 = CapacitiveSensor(12,26);  // resistor between pins 12 & 26 (A0) where A0 is read pin
+CapacitiveSensor fiber2 = CapacitiveSensor(12,25);  // resistor between pins 12 & 25 (A1) where A1 is read pin
 
 // Constants
 const int numReadings = 5;
@@ -64,9 +64,6 @@ void loop()
     fiber1Reading =  fiber1.capacitiveSensor(numReadings);
     // Fiber 2 is right
     fiber2Reading =  fiber2.capacitiveSensor(numReadings);
-
-    // fiber1Reading = random(500);
-    // fiber2Reading = random(500);
 
     Serial.print(timestamp - start_timestamp);
     Serial.print(",");

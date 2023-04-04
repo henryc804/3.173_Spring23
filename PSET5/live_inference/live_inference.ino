@@ -4,13 +4,13 @@ Running live inference
 
 /* Includes ---------------------------------------------------------------- */
 //CHANGE THIS LIBRARY TO BE THE NAME OF YOUR DOWNLOADED E.I. LIBRARY
-#include <a3173_lecture_test_inferencing.h>
+#include <a3173_Spring_23_Lecture_inferencing.h>
 
 #include <ESP_CapSense.h>
 
 // Capacitive sensor fibers
-CapacitiveSensor fiber1 = CapacitiveSensor(4,33);        // resistor between pins 4 (A5) & 33, pin 33 is read pin
-CapacitiveSensor fiber2 = CapacitiveSensor(4,15);        // resistor between pins 4 (A5) & 15, pin 15 is read pin
+CapacitiveSensor fiber1 = CapacitiveSensor(12,26);  // resistor between pins 12 & 26 (A0) where A0 is read pin
+CapacitiveSensor fiber2 = CapacitiveSensor(12,25);  // resistor between pins 12 & 25 (A1) where A1 is read pin
 
 // Constants
 const int numReadings = 5;
