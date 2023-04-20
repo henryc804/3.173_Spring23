@@ -42,8 +42,6 @@ void setup()
   Serial.println("Live inferencing demo");
 }
 
-int counter = 0;
-
 void loop()
 {
   long fiber1Reading;
@@ -53,6 +51,7 @@ void loop()
 
   // Record samples in buffer at THE SAME FREQUENCY AS WE INITIALLY TRAINED THE NETWORK ON
   // we can use EI methods to make sure it's always the same, but for now, it's your job to keep it the same
+  int counter = 0;
   start_timestamp = millis();
   for (int index = 0; index < NUM_SAMPLES; index++) {
     // taking timestamp to measure out target frequency
@@ -71,7 +70,7 @@ void loop()
     buffer[EI_CLASSIFIER_DSP_INPUT_FRAME_SIZE - 2] = fiber1Reading;
     buffer[EI_CLASSIFIER_DSP_INPUT_FRAME_SIZE - 1] = fiber2Reading;
 
-
+    // Change the number 25 to increase/decrease how many samples will be skipped before running the NN classifier, which is the same as increasing/decreasing the delay
     if (counter % 25 == 0) {
       run_inference();
       display_results();
@@ -84,6 +83,38 @@ void loop()
 
 }
 
+/**
+ * Prints the results from the neural network classifier.
+ */
+void display_results()
+{
+  // print the predictions
+  ei_printf("Predictions ");
+  ei_printf("(DSP: %d ms., Classification: %d ms., Anomaly: %d ms.)",
+      result.timing.dsp, result.timing.classification, result.timing.anomaly);
+  ei_printf(": \n");
+  ei_printf("[");
+  for (size_t ix = 0; ix < EI_CLASSIFIER_LABEL_COUNT; ix++) {
+      ei_printf("%.5f", result.classification[ix].value);
+        if (ix != EI_CLASSIFIER_LABEL_COUNT - 1) {
+            ei_printf(", ");
+        }
+    }
+    ei_printf("]\n");
+
+    // For loop in lines 109-111 prints out human-readable predictions
+    // NOTE FOR 3.173 CLASS: Add code in this function that checks which result has the highest value and signal depending on which result it is
+    // HINT: Add logic inside the for loop to keep track of which index (the "ix") had the highest value
+    //          then add code AFTER the for loop is done to check which label had the higest value based on that index
+    for (size_t ix = 0; ix < EI_CLASSIFIER_LABEL_COUNT; ix++) {
+        ei_printf("    %s: %.5f\n", result.classification[ix].label, result.classification[ix].value);
+    }
+
+}
+
+/**
+ * Runs the neural network classifier. You do not not need to modify this function
+ */
 void run_inference()
 {
   // the features are stored into flash, and we don't want to load everything into RAM
@@ -99,42 +130,11 @@ void run_inference()
   if (res != 0) return;
 }
 
-void display_results()
-{
-  // print the predictions
-  ei_printf("Predictions ");
-  ei_printf("(DSP: %d ms., Classification: %d ms., Anomaly: %d ms.)",
-      result.timing.dsp, result.timing.classification, result.timing.anomaly);
-  ei_printf(": \n");
-  ei_printf("[");
-  for (size_t ix = 0; ix < EI_CLASSIFIER_LABEL_COUNT; ix++) {
-      ei_printf("%.5f", result.classification[ix].value);
-#if EI_CLASSIFIER_HAS_ANOMALY == 1
-        ei_printf(", ");
-#else
-        if (ix != EI_CLASSIFIER_LABEL_COUNT - 1) {
-            ei_printf(", ");
-        }
-#endif
-    }
-#if EI_CLASSIFIER_HAS_ANOMALY == 1
-    ei_printf("%.3f", result.anomaly);
-#endif
-    ei_printf("]\n");
-
-    // human-readable predictions
-    for (size_t ix = 0; ix < EI_CLASSIFIER_LABEL_COUNT; ix++) {
-        ei_printf("    %s: %.5f\n", result.classification[ix].label, result.classification[ix].value);
-    }
-#if EI_CLASSIFIER_HAS_ANOMALY == 1
-    ei_printf("    anomaly score: %.3f\n", result.anomaly);
-#endif
-}
-
 /**
  * @brief      Copy raw feature data in out_ptr
  *             Function called by inference library
- *
+ *             You do not need to modify this function
+ * 
  * @param[in]  offset   The offset
  * @param[in]  length   The length
  * @param      out_ptr  The out pointer
